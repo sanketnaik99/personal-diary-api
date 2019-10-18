@@ -1,3 +1,6 @@
 {
-  "builds": [{ "src": "app.py", "use": "@now/python" }]
+  "builds": [{ "src": "app.py", "use": "@liudonghua123/now-flask" }],
+  "routes": [
+        { "src": "/api/v1/.*", "dest": "/api/v1"}
+    ]
 }
