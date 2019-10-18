@@ -43,25 +43,80 @@ def add_user():
     email = data['email']
     photoURL = data['photoURL']
     uid = data['uid']
-    cursor.execute(
+    try:
+        cursor.execute(
        "CREATE TABLE IF NOT EXISTS users (ID int NOT NULL AUTO_INCREMENT ,display_name VARCHAR(100), email VARCHAR(200), photoURL VARCHAR(1000), uid VARCHAR(100), PRIMARY KEY (ID));")
 
-    cursor.execute(f'INSERT INTO users (display_name, email, photoURL, uid) VALUES ("{name}", "{email}", "{photoURL}", "{uid}");')
+        cursor.execute(f'INSERT INTO users (display_name, email, photoURL, uid) VALUES ("{name}", "{email}", "{photoURL}", "{uid}");');
+        return jsonify({"result": "SUCCESS"})
 
-    return jsonify({"result": "SUCCESS"})
+    except:
+        return jsonify({"result": "ERROR"})
 
 
-@app.route(BASE_URL + 'get_user_data', methods=['POST'])
-def get_data():
+@app.route(BASE_URL + 'get-user-data', methods=['POST'])
+def get_user_data():
 
     data = request.form
     email = data['email']
 
-    cursor.execute(f"select * from users where email = '{email}'")
-    data = cursor.fetchall()
-    print(data)
+    try:
+        cursor.execute(f"select * from users where email = '{email}'")
+        data = cursor.fetchone()
+        return jsonify({"result": "SUCCESS", "data": data})
+    except:
+        return jsonify({"result": "ERROR"})
 
-    return jsonify(data)
+
+@app.route(BASE_URL + 'add-entry', methods=['POST'])
+def add_entry():
+
+    formData = request.form
+    uid = formData["uid"]
+    id = formData["id"]
+    data = formData["data"]
+    month = formData["month"]
+    year = formData["year"]
+    date = formData["date"]
+    day = formData["day"]
+
+    try:
+        cursor.execute(f"CREATE TABLE IF NOT EXISTS {uid}_diary (UID int NOT NULL AUTO_INCREMENT, id VARCHAR(20), date VARCHAR(10), month VARCHAR(20), year VARCHAR(10), day VARCHAR(10), data VARCHAR(2000), PRIMARY KEY (UID));")
+        cursor.execute(f"insert into {uid}_diary (id, date, month, year, day, data) VALUES (\"{id}\", \"{date}\", \"{month}\", \"{year}\", \"{day}\", \"{data}\");")
+
+        return jsonify({"result": "SUCCESS"})
+    except:
+        return jsonify({"result": "ERROR"})
+
+
+@app.route(BASE_URL + 'get-data', methods=['POST'])
+def get_diary_data():
+
+    data = request.form
+    uid = data['uid']
+
+    try:
+        cursor.execute(f"select * from {uid}_diary ORDER BY id DESC;")
+        result = cursor.fetchall()
+        return jsonify({"result": "SUCCESS", "data": result})
+    except:
+        return jsonify({"result": "ERROR"})
+
+
+@app.route(BASE_URL + 'update-entry', methods=['POST'])
+def update_entry():
+
+    formData = request.form
+    uid = formData['uid']
+    data = formData['data']
+    id = formData['id']
+
+    try:
+        cursor.execute(f'update {uid}_diary SET  `data` = "{data}" where id = "{id}";')
+        return jsonify({"result": "SUCCESS"})
+    except:
+        return jsonify({"result": "ERROR"})
+
 
 # Run Flask App
 if __name__ == "__main__":
