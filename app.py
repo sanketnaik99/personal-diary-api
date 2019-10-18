@@ -17,7 +17,9 @@ cursor = db.cursor()
 app = Flask(__name__)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
-
+#
+# CREATE DATABASE
+#
 @app.route(BASE_URL + 'create_db', methods=['POST'])
 def create_db():
     data = request.form
@@ -26,8 +28,8 @@ def create_db():
 
     if authentication == AUTH_CODE:
         try:
-            cursor.execute("CREATE DATABASE IF NOT EXISTS test_db;")
-            cursor.execute('USE test_db')
+            cursor.execute("CREATE DATABASE IF NOT EXISTS personal_diary;")
+            cursor.execute('USE personal_diary')
             return jsonify({"result": "SUCCESS"})
         except:
             return jsonify({"result": "ERROR"})
@@ -35,7 +37,10 @@ def create_db():
         return jsonify({"result": "ERROR"})
 
 
-@app.route(BASE_URL + 'add-user', methods=['POST'])
+#
+# START OF USER ACTIONS
+#
+app.route(BASE_URL + 'add-user', methods=['POST'])
 def add_user():
     data = request.form
 
@@ -67,7 +72,13 @@ def get_user_data():
     except:
         return jsonify({"result": "ERROR"})
 
+#
+# END OF USER ACTIONS
+#
 
+#
+# START OF DIARY ACTIONS
+#
 @app.route(BASE_URL + 'add-entry', methods=['POST'])
 def add_entry():
 
@@ -117,6 +128,9 @@ def update_entry():
     except:
         return jsonify({"result": "ERROR"})
 
+#
+# END OF DIARY ACTIONS
+#
 
 # Run Flask App
 if __name__ == "__main__":
