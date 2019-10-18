@@ -61,7 +61,7 @@ def get_user_data():
     email = data['email']
 
     try:
-        cursor.execute(f"select * from users where email = '{email}'")
+        cursor.execute(f"select * from users where `email` = \"{email}\"")
         data = cursor.fetchone()
         return jsonify({"result": "SUCCESS", "data": data})
     except:
