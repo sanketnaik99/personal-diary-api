@@ -10,7 +10,7 @@ BASE_URL = "/api/v1/"
 AUTH_CODE = "Sanketnaik@1999"
 
 # Connect to MySQL database
-db = pymysql.connect("remotemysql.com", "wHTjxfId7T", "6ETF8lfjGM", "wHTjxfId7T", port=3306, autocommit=True)
+db = pymysql.connect("remotemysql.com", "a0EjWgNg3d", "xgrm2qldV8", "a0EjWgNg3d", port=3306, autocommit=True)
 cursor = db.cursor()
 
 # Initialize Flask App
